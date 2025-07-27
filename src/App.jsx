@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// --- Educational Framework: South African CAPS Curriculum for Grades 6 & 7 ---
+// --- Educational Framework: South African CAPS Curriculum ---
+// This object holds all the educational content, structured by subject.
 const SUBJECT_DATA = {
   'Mathematics': {
     icon: '🧮',
@@ -59,7 +60,12 @@ const SUBJECT_DATA = {
   }
 };
 
-// --- Custom Hook for Text-to-Speech (Aliza's Voice) ---
+// --- Reusable Hooks for Browser APIs ---
+
+/**
+ * A custom hook to manage Text-to-Speech functionality for Aliza's voice.
+ * It handles speaking, stopping, and provides a component for word-by-word highlighting.
+ */
 const useSpeechSynthesis = (text) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [highlightedWordIndex, setHighlightedWordIndex] = useState(-1);
@@ -76,10 +82,12 @@ const useSpeechSynthesis = (text) => {
     const voices = window.speechSynthesis.getVoices();
     let selectedVoice = voices.find(voice => voice.lang === 'en-ZA' && voice.name.includes('Female'));
     if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang.startsWith('en') && voice.name.includes('Female'));
+    
     utterance.voice = selectedVoice;
     utterance.lang = selectedVoice?.lang || 'en-ZA';
     utterance.pitch = 1.2;
     utterance.rate = 0.95;
+
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => { setIsSpeaking(false); setHighlightedWordIndex(-1); };
     utterance.onboundary = (event) => {
@@ -94,14 +102,17 @@ const useSpeechSynthesis = (text) => {
   const SpokenText = () => (
     <span>
       {words.map((word, index) => (
-        <span key={index} style={index === highlightedWordIndex ? { backgroundColor: '#FCD34D', color: '#1E3A8A', borderRadius: '3px' } : {}}>{word}</span>
+        <span key={index} style={index === highlightedWordIndex ? getStyles().highlightedWord : {}}>{word}</span>
       ))}
     </span>
   );
   return { speak, isSpeaking, SpokenText };
 };
 
-// --- Custom Hook for Speech-to-Text (User's Voice) ---
+/**
+ * A custom hook to manage Speech-to-Text for the user's voice input.
+ * It handles starting/stopping listening and provides the transcribed text.
+ */
 const useSpeechRecognition = (onTranscript) => {
     const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef(null);
@@ -121,38 +132,32 @@ const useSpeechRecognition = (onTranscript) => {
         recognition.onresult = (event) => {
             let finalTranscript = '';
             for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
-                }
+                if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript;
             }
-            if (finalTranscript) {
-                onTranscript(finalTranscript);
-            }
+            if (finalTranscript) onTranscript(finalTranscript);
         };
         
         recognition.onstart = () => setIsListening(true);
         recognition.onend = () => setIsListening(false);
-        recognition.onerror = (event) => {
-            console.error('Speech recognition error', event.error);
-            setIsListening(false);
-        };
+        recognition.onerror = (event) => { console.error('Speech recognition error', event.error); setIsListening(false); };
 
         recognitionRef.current = recognition;
     }, [onTranscript]);
 
     const toggleListening = () => {
-        if (isListening) {
-            recognitionRef.current?.stop();
-        } else {
-            recognitionRef.current?.start();
-        }
+        if (isListening) recognitionRef.current?.stop();
+        else recognitionRef.current?.start();
     };
 
     return { isListening, toggleListening };
 };
 
+// --- UI Components ---
 
-// --- UI Component for a single chat message ---
+/**
+ * Renders a single chat message bubble with styles for Aliza, her challenges, and the user.
+ * Includes the speaker button and text highlighting functionality.
+ */
 const ChatMessage = ({ message }) => {
   const styles = getStyles();
   const { speak, isSpeaking, SpokenText } = useSpeechSynthesis(message.text);
@@ -176,9 +181,34 @@ const ChatMessage = ({ message }) => {
   );
 };
 
-// --- Main App Component ---
-export default function App() {
-  const [currentSubject, setCurrentSubject] = useState(null);
+/**
+ * The initial screen where the user selects a subject to study.
+ */
+const SubjectSelectionScreen = ({ onSubjectSelect }) => {
+    const styles = getStyles();
+    return (
+        <div style={styles.container}>
+            <div style={styles.subjectSelectionContainer}>
+                <h1 style={styles.appName}>Aliza</h1>
+                <p style={styles.introText}>Your friendly study buddy!</p>
+                <p style={styles.introText}>Which subject are we diving into today?</p>
+                <div style={styles.subjectGrid}>
+                    {Object.keys(SUBJECT_DATA).map(subject => (
+                        <button key={subject} style={styles.subjectButton} onClick={() => onSubjectSelect(subject)}>
+                            <span style={styles.subjectIcon}>{SUBJECT_DATA[subject].icon}</span>
+                            <span style={styles.subjectName}>{subject}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/**
+ * The main chat screen, combining the header, chat area, and input controls.
+ */
+const ChatScreen = ({ subject, onBack }) => {
   const [contentIndex, setContentIndex] = useState(0);
   const [chatHistory, setChatHistory] = useState([]);
   const [userInput, setUserInput] = useState('');
@@ -188,18 +218,27 @@ export default function App() {
 
   const scrollRef = useRef();
 
-  // Handle updates from the speech recognition hook
-  const handleTranscript = (transcript) => {
-    setUserInput(prev => prev + transcript);
-  };
+  const handleTranscript = (transcript) => setUserInput(prev => prev + transcript);
   const { isListening, toggleListening } = useSpeechRecognition(handleTranscript);
 
-  useEffect(() => { window.speechSynthesis.getVoices(); }, []);
-  useEffect(() => { setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100); }, [chatHistory]);
+  // Effect to scroll to the bottom of the chat on new messages
+  useEffect(() => { 
+    setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100); 
+  }, [chatHistory]);
+
+  // Effect to initialize the chat when a subject is chosen
+  useEffect(() => {
+    const firstContent = SUBJECT_DATA[subject].content[0];
+    setChatHistory([
+        { sender: 'aliza', text: `Howzit! Ready to tackle some ${subject}? Let's start with this one.` }, 
+        { sender: 'aliza', text: firstContent.fact },
+        { sender: 'aliza', text: firstContent.challenge, isChallenge: true }
+    ]);
+  }, [subject]);
 
   const getAlizaResponse = async (userMessage, currentChallenge, intent = 'answer') => {
     setIsLoading(true);
-    setShowNextButton(false); // Hide button while Aliza is thinking
+    setShowNextButton(false);
     
     let promptType;
     if (intent === 'explain_differently') {
@@ -224,12 +263,11 @@ export default function App() {
       setChatHistory(prev => [...prev, { sender: 'aliza', text: alizaResponse, isCorrect }]);
       
       if (isCorrect) {
-          setShowNextButton(true); // Show button on correct answer
+          setShowNextButton(true);
           setConsecutiveMistakes(0);
       } else if (intent === 'answer') {
           setConsecutiveMistakes(prev => prev + 1);
       }
-
     } catch (error) {
       setChatHistory(prev => [...prev, { sender: 'aliza', text: "Eish, my circuits are a bit tangled! Let's try again." }]);
     } finally {
@@ -240,7 +278,7 @@ export default function App() {
   const handleUserSend = () => {
     if (!userInput.trim()) return;
     const currentChallenge = [...chatHistory].reverse().find(msg => msg.isChallenge)?.text;
-    setShowNextButton(false); // Hide button when user sends a new message
+    setShowNextButton(false);
     setChatHistory(prev => [...prev, { sender: 'user', text: userInput }]);
     const frustrationKeywords = ['don\'t understand', 'don\'t get it', 'too hard', 'confused'];
     if (frustrationKeywords.some(keyword => userInput.toLowerCase().includes(keyword))) {
@@ -252,8 +290,8 @@ export default function App() {
   };
 
   const handleNextQuestion = () => {
-    setShowNextButton(false); // Hide button after clicking
-    const subjectContent = SUBJECT_DATA[currentSubject].content;
+    setShowNextButton(false);
+    const subjectContent = SUBJECT_DATA[subject].content;
     const nextIndex = (contentIndex + 1) % subjectContent.length;
     setContentIndex(nextIndex);
     const nextContent = subjectContent[nextIndex];
@@ -262,17 +300,6 @@ export default function App() {
         { sender: 'aliza', text: `Sharp sharp! Here is the next one.` }, 
         { sender: 'aliza', text: nextContent.fact },
         { sender: 'aliza', text: nextContent.challenge, isChallenge: true }
-    ]);
-  };
-
-  const startSubject = (subject) => {
-    setCurrentSubject(subject);
-    setContentIndex(0);
-    const firstContent = SUBJECT_DATA[subject].content[0];
-    setChatHistory([
-        { sender: 'aliza', text: `Howzit! Ready to tackle some ${subject}? Let's start with this one.` }, 
-        { sender: 'aliza', text: firstContent.fact },
-        { sender: 'aliza', text: firstContent.challenge, isChallenge: true }
     ]);
   };
   
@@ -284,32 +311,12 @@ export default function App() {
 
   const styles = getStyles();
 
-  if (!currentSubject) {
-    return (
-      <div style={styles.container}>
-        <div style={styles.subjectSelectionContainer}>
-          <h1 style={styles.appName}>Aliza</h1>
-          <p style={styles.introText}>Your friendly study buddy!</p>
-          <p style={styles.introText}>Which subject are we diving into today?</p>
-          <div style={styles.subjectGrid}>
-            {Object.keys(SUBJECT_DATA).map(subject => (
-              <button key={subject} style={styles.subjectButton} onClick={() => startSubject(subject)}>
-                <span style={styles.subjectIcon}>{SUBJECT_DATA[subject].icon}</span>
-                <span style={styles.subjectName}>{subject}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={styles.container}>
       <div style={styles.chatContainer}>
         <div style={styles.header}>
-            <button style={styles.backButton} onClick={() => setCurrentSubject(null)}>← Back</button>
-            <h2 style={styles.headerTitle}>{currentSubject}</h2>
+            <button style={styles.backButton} onClick={onBack}>← Back</button>
+            <h2 style={styles.headerTitle}>{subject}</h2>
             <div style={{width: 50}}/>
         </div>
         <div style={styles.chatArea}>
@@ -345,11 +352,33 @@ export default function App() {
       </div>
     </div>
   );
+};
+
+
+/**
+ * The main App component. It acts as a controller to show either the
+ * subject selection screen or the main chat screen.
+ */
+export default function App() {
+  const [currentSubject, setCurrentSubject] = useState(null);
+
+  // Load voices for TTS hook on initial render
+  useEffect(() => { 
+    window.speechSynthesis.getVoices(); 
+  }, []);
+
+  if (!currentSubject) {
+    return <SubjectSelectionScreen onSubjectSelect={setCurrentSubject} />;
+  }
+
+  return <ChatScreen subject={currentSubject} onBack={() => setCurrentSubject(null)} />;
 }
 
 // --- Styles ---
+// Grouped into a single function to keep them organized and out of the component logic.
 const getStyles = () => ({
   container: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F0F4F8', fontFamily: 'sans-serif' },
+  // Subject Selection Screen
   subjectSelectionContainer: { textAlign: 'center', padding: 20 },
   appName: { fontSize: 56, fontWeight: 'bold', color: '#1E3A8A', margin: 0 },
   introText: { fontSize: 20, color: '#4A5568', marginTop: 8 },
@@ -357,6 +386,7 @@ const getStyles = () => ({
   subjectButton: { backgroundColor: '#fff', border: '2px solid #DBEAFE', borderRadius: 20, width: 140, height: 140, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
   subjectIcon: { fontSize: 48 },
   subjectName: { fontSize: 16, color: '#1E3A8A', fontWeight: '600', marginTop: 10 },
+  // Chat Screen
   chatContainer: { display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 600, height: '100%', backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0,0,0,0.1)', borderRadius: '20px', overflow: 'hidden' },
   header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', backgroundColor: '#DBEAFE' },
   backButton: { background: 'none', border: 'none', fontSize: 16, color: '#1E3A8A', cursor: 'pointer', fontWeight: 'bold' },
@@ -368,6 +398,7 @@ const getStyles = () => ({
   chatTextContainer: { display: 'flex', alignItems: 'center', gap: '10px' },
   chatText: { margin: 0, fontSize: 16, lineHeight: 1.5, flex: 1 },
   speakerButton: { background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', padding: '0 5px' },
+  highlightedWord: { backgroundColor: '#FCD34D', color: '#1E3A8A', borderRadius: '3px' },
   nextQuestionContainer: { padding: '10px 20px', backgroundColor: '#F9FAFB', display: 'flex', justifyContent: 'center' },
   nextQuestionButton: { backgroundColor: '#10B981', color: 'white', border: 'none', borderRadius: 20, padding: '10px 25px', cursor: 'pointer', fontSize: 16, fontWeight: 'bold' },
   presetReplies: { display: 'flex', gap: '10px', padding: '10px 20px', borderTop: '1px solid #E5E7EB' },
