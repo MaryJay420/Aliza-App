@@ -3,50 +3,62 @@ import React, { useState, useEffect, useRef } from 'react';
 // --- Educational Framework: South African CAPS Curriculum ---
 // This object holds all the educational content, structured by subject.
 const SUBJECT_DATA = {
-    'Mathematics': {
-        icon: '🧮',
-        content: [
-            { type: 'text', fact: 'When you multiply two negative numbers, the result is always a positive number. For example, -5 x -3 = 15.', challenge: 'What would -7 multiplied by -4 be? And can you explain why the answer is positive?' },
-            { type: 'text', fact: 'The "BODMAS" rule helps us remember the order of operations in math: Brackets, Orders (like powers), Division, Multiplication, Addition, Subtraction.', challenge: 'Using BODMAS, what is the answer to 10 + 2 x 5?' },
-        ]
-    },
-    'English (HL)': {
-        icon: '📚',
-        content: [
-            { type: 'text', fact: 'A "protagonist" is the main character in a story, while the "antagonist" is the character who opposes them.', challenge: 'In the story of The Three Little Pigs, who is the protagonist and who is the antagonist?' },
-            { type: 'text', fact: 'An "adjective" is a word that describes a noun. For example, in "the beautiful Cape Town sunset," the word "beautiful" is the adjective.', challenge: 'Write a sentence about your favourite food and include at least one adjective.' },
-        ]
-    },
-    'Afrikaans (FAL)': {
-        icon: '🗣️',
-        content: [
-            { type: 'text', fact: 'In Afrikaans, we use "verkleinwoorde" (diminutives) to show something is small by adding suffixes like "-ie" or "-tjie". For example, a small dog ("hond") becomes a "hondjie".', challenge: 'What would the "verkleinwoord" for "kat" (cat) be?' },
-        ]
-    },
-    'Natural Sciences & Tech': {
-        icon: '🔬',
-        content: [
-            { type: 'text', fact: 'Photosynthesis is the process where plants use sunlight, water, and carbon dioxide to create their own food (glucose) and release oxygen into the air.', challenge: 'What are the three main "ingredients" a plant needs for photosynthesis?' },
-        ]
-    },
-    'Social Sciences': {
-        icon: '🌍',
-        content: [
-            { type: 'text', fact: 'Democracy in South Africa began in 1994 with the first democratic election where all citizens, regardless of race, could vote.', challenge: 'Why was the 1994 election so important for South Africa?' },
-        ]
-    },
+  'Mathematics': {
+    icon: '🧮',
+    content: [
+      { type: 'text', fact: 'When you multiply two negative numbers, the result is always a positive number. For example, -5 x -3 = 15.', challenge: 'What would -7 multiplied by -4 be? And can you explain why the answer is positive?' },
+      { type: 'text', fact: 'The "BODMAS" rule helps us remember the order of operations in math: Brackets, Orders (like powers), Division, Multiplication, Addition, Subtraction.', challenge: 'Using BODMAS, what is the answer to 10 + 2 x 5?' },
+    ]
+  },
+  'English (HL)': {
+    icon: '📚',
+    content: [
+      { type: 'text', fact: 'A "protagonist" is the main character in a story, while the "antagonist" is the character who opposes them.', challenge: 'In the story of The Three Little Pigs, who is the protagonist and who is the antagonist?' },
+      { type: 'text', fact: 'An "adjective" is a word that describes a noun. For example, in "the beautiful Cape Town sunset," the word "beautiful" is the adjective.', challenge: 'Write a sentence about your favourite food and include at least one adjective.' },
+    ]
+  },
+  'Afrikaans (FAL)': {
+    icon: '🗣️',
+    content: [
+      { type: 'text', fact: 'In Afrikaans, we use "verkleinwoorde" (diminutives) to show something is small by adding suffixes like "-ie" or "-tjie". For example, a small dog ("hond") becomes a "hondjie".', challenge: 'What would the "verkleinwoord" for "kat" (cat) be?' },
+    ]
+  },
+  'Natural Sciences & Tech': {
+    icon: '🔬',
+    content: [
+      { type: 'text', fact: 'Photosynthesis is the process where plants use sunlight, water, and carbon dioxide to create their own food (glucose) and release oxygen into the air.', challenge: 'What are the three main "ingredients" a plant needs for photosynthesis?' },
+    ]
+  },
+  'Social Sciences': {
+    icon: '🌍',
+    content: [
+      { type: 'text', fact: 'Democracy in South Africa began in 1994 with the first democratic election where all citizens, regardless of race, could vote.', challenge: 'Why was the 1994 election so important for South Africa?' },
+    ]
+  },
     'Life Skills (Project)': {
-        icon: '❤️',
-        content: [
-            { type: 'text', fact: 'Let\'s start with the Five Animal Freedoms. The first is Freedom from Hunger and Thirst. This means animals must always have fresh water and a healthy diet.', challenge: 'In your own words, what does "Freedom from Hunger and Thirst" mean for a pet?' },
-            { type: 'text', fact: 'The second freedom is Freedom from Discomfort. This means animals need a suitable place to live, with shelter and a comfy resting area.', challenge: 'How could you provide "Freedom from Discomfort" for a dog that lives outside?' },
-            { type: 'text', fact: 'The third freedom is Freedom from Pain, Injury, or Disease. This means animals should be prevented from getting sick, and if they do, they must be treated by a vet quickly.', challenge: 'What is the owner\'s responsibility according to this freedom if their cat seems sick?' },
-            { type: 'text', fact: 'The fourth freedom is Freedom to Express Normal Behaviour. This means animals need enough space and the company of their own kind to act naturally.', challenge: 'Why is it important for a social animal, like a dog, to have "company of their own kind"?' },
-            { type: 'text', fact: 'The fifth freedom is Freedom from Fear and Distress. This means an animal\'s living conditions shouldn\'t cause them to be scared or anxious.', challenge: 'What is one thing that could cause a pet to feel fear or distress in a home?' },
-        ]
-    }
+    icon: '❤️',
+    content: [
+      { type: 'text', fact: 'Let\'s start with the Five Animal Freedoms. The first is Freedom from Hunger and Thirst. This means animals must always have fresh water and a healthy diet.', challenge: 'In your own words, what does "Freedom from Hunger and Thirst" mean for a pet?' },
+      { type: 'text', fact: 'The second freedom is Freedom from Discomfort. This means animals need a suitable place to live, with shelter and a comfy resting area.', challenge: 'How could you provide "Freedom from Discomfort" for a dog that lives outside?' },
+      { type: 'text', fact: 'The third freedom is Freedom from Pain, Injury, or Disease. This means animals should be prevented from getting sick, and if they do, they must be treated by a vet quickly.', challenge: 'What is the owner\'s responsibility according to this freedom if their cat seems sick?' },
+      { type: 'text', fact: 'The fourth freedom is Freedom to Express Normal Behaviour. This means animals need enough space and the company of their own kind to act naturally.', challenge: 'Why is it important for a social animal, like a dog, to have "company of their own kind"?' },
+      { type: 'text', fact: 'The fifth freedom is Freedom from Fear and Distress. This means an animal\'s living conditions shouldn\'t cause them to be scared or anxious.', challenge: 'What is one thing that could cause a pet to feel fear or distress in a home?' },
+      { type: 'text', fact: 'Now let\'s look at Animal Cruelty. One type is Neglect, which is when an owner fails to provide basic care, like enough food or water.', challenge: 'Give your own example of what animal neglect might look like.' },
+      { type: 'text', fact: 'Another type of cruelty is Direct Abuse, which is when a person intentionally hurts an animal, like hitting it or forcing it to fight.', challenge: 'What is the main difference between neglect and direct abuse?' },
+      { type: 'text', fact: 'According to the Animals Protection Act 71 of 1962 in South Africa, a person found guilty of animal cruelty can face a large fine and up to 12 months in prison.', challenge: 'What are the two main consequences for animal cruelty under South African law?' },
+      { type: 'text', fact: 'The Animals Protection Act of 1962 protects all domestic animals. Breeds that are often victims of cruelty in SA include Pit Bull Terriers (used for fighting), Greyhounds (used for illegal hunting), and Donkeys (often overworked).', challenge: 'The act protects all domestic animals, but can you name one of the breeds often affected by cruelty and why?' },
+      { type: 'text', fact: 'Let\'s compare farming methods. Factory Farming is where many animals are kept in small, confined spaces like cages to produce food cheaply.', challenge: 'In your own words, what is the main goal of factory farming?' },
+      { type: 'text', fact: 'Free-Range Farming is when animals are given access to the outdoors and have more space to move around naturally.', challenge: 'What is the biggest difference for the animal between factory farming and free-range farming?' },
+      { type: 'text', fact: 'A benefit of free-range farming is better animal welfare, as the animals are less stressed. A challenge is that it costs more, making the food more expensive.', challenge: 'Name one good thing and one challenging thing about free-range farming.' },
+      { type: 'text', fact: 'Sterilisation (spaying or neutering) is a vet operation that stops an animal from having babies. Its main benefit is preventing unwanted puppies and kittens, which reduces the number of stray animals.', challenge: 'Why is sterilising your pet a good idea for the community?' },
+      { type: 'text', fact: 'All household pets have basic needs. Two important ones are: Proper Nutrition (the right food and fresh water) and Safe Shelter (a warm, dry place to sleep).', challenge: 'Besides food and shelter, what is another important need a household pet has?' },
+      { type: 'text', fact: 'The Cape of Good Hope SPCA in Grassy Park, Cape Town, helps all kinds of animals, from dogs and cats to farm animals and wildlife.', challenge: 'What makes the SPCA different from a normal vet?' },
+      { type: 'text', fact: 'People can support the SPCA by donating money, food, or blankets, by volunteering their time, or by choosing to adopt a rescue animal.', challenge: 'If you couldn\'t give money, what is another way you could help the SPCA?' },
+      { type: 'text', fact: 'When you adopt an animal from the SPCA, the adoption fee often helps cover the cost of their sterilisation and their first vaccinations.', challenge: 'What are two important health-related things an adoption fee usually pays for?' },
+      { type: 'text', fact: 'Fireworks can be a form of animal cruelty because the loud bangs cause extreme fear and stress. Animals have very sensitive hearing and can panic and run away.', challenge: 'Explain in your own words why fireworks are so scary for animals.' },
+    ]
+  }
 };
-
 
 // --- Reusable Hooks for Browser APIs ---
 
@@ -55,77 +67,53 @@ const SUBJECT_DATA = {
  * It handles speaking, stopping, and provides a component for word-by-word highlighting.
  */
 const useSpeechSynthesis = (text) => {
-    const [isSpeaking, setIsSpeaking] = useState(false);
-    const [highlightedWordIndex, setHighlightedWordIndex] = useState(-1);
-    const utteranceRef = useRef(null);
-    const words = text.split(/(\s+)/);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [highlightedWordIndex, setHighlightedWordIndex] = useState(-1);
+  const words = text.split(/(\s+)/);
 
-    useEffect(() => {
-        const utterance = new SpeechSynthesisUtterance(text);
-        const setVoice = () => {
-            const voices = window.speechSynthesis.getVoices();
-            let selectedVoice = voices.find(voice => voice.lang === 'en-ZA' && voice.name.includes('Female'));
-            if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang.startsWith('en') && voice.name.includes('Female'));
-            if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang.startsWith('en'));
-            
-            utterance.voice = selectedVoice;
-            utterance.lang = selectedVoice?.lang || 'en-ZA';
-        };
+  const speak = () => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setHighlightedWordIndex(-1);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = voices.find(voice => voice.lang === 'en-ZA' && voice.name.includes('Female'));
+    if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang.startsWith('en') && voice.name.includes('Female'));
+    
+    utterance.voice = selectedVoice;
+    utterance.lang = selectedVoice?.lang || 'en-ZA';
+    utterance.pitch = 1.2;
+    utterance.rate = 0.95;
 
-        setVoice();
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = setVoice;
-        }
-
-        utterance.pitch = 1.1;
-        utterance.rate = 1;
-
-        utterance.onstart = () => setIsSpeaking(true);
-        utterance.onend = () => {
-            setIsSpeaking(false);
-            setHighlightedWordIndex(-1);
-        };
-        utterance.onerror = () => {
-             setIsSpeaking(false);
-             setHighlightedWordIndex(-1);
-        };
-        utterance.onboundary = (event) => {
-            if (event.name === 'word') {
-                const wordCount = text.substring(0, event.charIndex).split(/(\s+)/).filter(Boolean).length;
-                setHighlightedWordIndex(wordCount);
-            }
-        };
-        utteranceRef.current = utterance;
-
-        return () => {
-            window.speechSynthesis.cancel();
-        };
-    }, [text]);
-
-    const speak = () => {
-        if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-        } else if (utteranceRef.current) {
-            window.speechSynthesis.speak(utteranceRef.current);
-        }
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => { setIsSpeaking(false); setHighlightedWordIndex(-1); };
+    utterance.onboundary = (event) => {
+      if (event.name === 'word') {
+        const wordCount = text.substring(0, event.charIndex).split(/(\s+)/).filter(Boolean).length;
+        setHighlightedWordIndex(wordCount);
+      }
     };
+    window.speechSynthesis.speak(utterance);
+  };
 
-    const SpokenText = () => (
-        <span>
-            {words.map((word, index) => (
-                <span key={index} className={index === highlightedWordIndex ? 'bg-yellow-300 rounded' : ''}>{word}</span>
-            ))}
-        </span>
-    );
-
-    return { speak, isSpeaking, SpokenText };
+  const SpokenText = () => (
+    <span>
+      {words.map((word, index) => (
+        <span key={index} style={index === highlightedWordIndex ? getStyles().highlightedWord : {}}>{word}</span>
+      ))}
+    </span>
+  );
+  return { speak, isSpeaking, SpokenText };
 };
-
 
 /**
  * A custom hook to manage Speech-to-Text for the user's voice input.
+ * It handles starting/stopping listening and provides the transcribed text.
  */
-const useSpeechRecognition = ({ onTranscript }) => {
+const useSpeechRecognition = (onTranscript) => {
     const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef(null);
 
@@ -135,7 +123,7 @@ const useSpeechRecognition = ({ onTranscript }) => {
             console.error("Speech Recognition not supported in this browser.");
             return;
         }
-
+        
         const recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
@@ -144,29 +132,21 @@ const useSpeechRecognition = ({ onTranscript }) => {
         recognition.onresult = (event) => {
             let finalTranscript = '';
             for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
-                }
+                if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript;
             }
             if (finalTranscript) onTranscript(finalTranscript);
         };
-
+        
         recognition.onstart = () => setIsListening(true);
         recognition.onend = () => setIsListening(false);
-        recognition.onerror = (event) => {
-            console.error('Speech recognition error', event.error);
-            setIsListening(false);
-        };
+        recognition.onerror = (event) => { console.error('Speech recognition error', event.error); setIsListening(false); };
 
         recognitionRef.current = recognition;
     }, [onTranscript]);
 
     const toggleListening = () => {
-        if (isListening) {
-            recognitionRef.current?.stop();
-        } else {
-            recognitionRef.current?.start();
-        }
+        if (isListening) recognitionRef.current?.stop();
+        else recognitionRef.current?.start();
     };
 
     return { isListening, toggleListening };
@@ -175,133 +155,48 @@ const useSpeechRecognition = ({ onTranscript }) => {
 // --- UI Components ---
 
 /**
- * Renders a single chat message bubble.
+ * Renders a single chat message bubble with styles for Aliza, her challenges, and the user.
+ * Includes the speaker button and text highlighting functionality.
  */
 const ChatMessage = ({ message }) => {
-    const { speak, isSpeaking, SpokenText } = useSpeechSynthesis(message.text);
-    const isAliza = message.sender === 'aliza';
-    const isUser = message.sender === 'user';
-    
-    const bubbleClasses = {
-        base: 'max-w-[85%] rounded-2xl px-4 py-3 shadow-sm',
-        aliza: 'bg-indigo-100 text-gray-800 rounded-bl-lg',
-        alizaChallenge: 'bg-amber-100 border border-amber-300 text-gray-800 rounded-bl-lg',
-        user: 'bg-blue-500 text-white self-end rounded-br-lg'
-    };
-    
-    let specificBubbleClass = bubbleClasses.aliza;
-    if (isUser) {
-        specificBubbleClass = bubbleClasses.user;
-    } else if (message.isChallenge) {
-        specificBubbleClass = bubbleClasses.alizaChallenge;
-    }
+  const styles = getStyles();
+  const { speak, isSpeaking, SpokenText } = useSpeechSynthesis(message.text);
+  const isAliza = message.sender === 'aliza';
+  
+  let bubbleStyle = styles.userBubble;
+  if(isAliza) {
+      bubbleStyle = message.isChallenge ? styles.alizaChallengeBubble : styles.alizaBubble;
+  }
 
-    return (
-        <div className={`${bubbleClasses.base} ${specificBubbleClass}`}>
-            <div className="flex items-center gap-2">
-                <div className="flex-1 text-base leading-relaxed">
-                    {message.isCorrect && '⭐ '}
-                    <SpokenText />
-                </div>
-                {isAliza && <button onClick={speak} className="text-2xl shrink-0">{isSpeaking ? '🤫' : '🔊'}</button>}
-            </div>
+  return (
+    <div style={bubbleStyle}>
+      <div style={styles.chatTextContainer}>
+        <div style={styles.chatText}>
+            {message.isCorrect && '⭐ '}
+            <SpokenText />
         </div>
-    );
+        {isAliza && <button onClick={speak} style={styles.speakerButton}>{isSpeaking ? '🤫' : '🔊'}</button>}
+      </div>
+    </div>
+  );
 };
-
-/**
- * Renders the list of chat messages.
- */
-const MessageList = ({ chatHistory, isLoading }) => {
-    const scrollRef = useRef();
-
-    useEffect(() => {
-        setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
-    }, [chatHistory, isLoading]);
-
-    return (
-        <div className="flex-1 p-4 sm:p-6 overflow-y-auto flex flex-col gap-4 bg-gray-50">
-            {chatHistory.map((msg, index) => <ChatMessage key={index} message={msg} />)}
-            {isLoading && (
-                <div className="max-w-[85%] rounded-2xl px-4 py-3 shadow-sm bg-indigo-100 text-gray-800 rounded-bl-lg">
-                    <p className="text-base leading-relaxed animate-pulse">Thinking...</p>
-                </div>
-            )}
-            <div ref={scrollRef} />
-        </div>
-    );
-};
-
-/**
- * Renders the input area with text field and buttons.
- */
-const ChatInput = ({ onSend, isListening, onToggleListening, isLoading, showNextButton }) => {
-    const [userInput, setUserInput] = useState('');
-    const handleTranscript = (transcript) => setUserInput(prev => prev + transcript);
-    const { isListening: micIsListening, toggleListening } = useSpeechRecognition({ onTranscript: handleTranscript });
-
-    useEffect(() => {
-        if (isListening !== micIsListening) {
-             onToggleListening(micIsListening);
-        }
-    }, [micIsListening, isListening, onToggleListening]);
-
-
-    const handleSendClick = () => {
-        if (!userInput.trim()) return;
-        onSend(userInput);
-        setUserInput('');
-    };
-
-    const isDisabled = isLoading || showNextButton;
-
-    return (
-        <div className="p-3 sm:p-4 border-t border-gray-200 bg-white">
-            <div className="flex items-center gap-2 sm:gap-3">
-                <input
-                    type="text"
-                    className="flex-1 w-full border border-gray-300 rounded-full px-5 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
-                    placeholder={micIsListening ? "Listening..." : "Type or speak your answer..."}
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
-                    disabled={isDisabled}
-                />
-                <button 
-                    className={`shrink-0 w-12 h-12 text-2xl rounded-full flex items-center justify-center transition-colors ${micIsListening ? 'bg-red-200 text-red-600' : 'bg-gray-200 text-gray-600'} disabled:bg-gray-100 disabled:text-gray-400`}
-                    onClick={toggleListening} 
-                    disabled={isDisabled}
-                >
-                    🎙️
-                </button>
-                <button 
-                    className="shrink-0 w-12 h-12 text-2xl rounded-full flex items-center justify-center bg-blue-500 text-white transition-colors hover:bg-blue-600 disabled:bg-blue-300"
-                    onClick={handleSendClick} 
-                    disabled={isDisabled}
-                >
-                    ➤
-                </button>
-            </div>
-        </div>
-    );
-};
-
 
 /**
  * The initial screen where the user selects a subject to study.
  */
 const SubjectSelectionScreen = ({ onSubjectSelect }) => {
+    const styles = getStyles();
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 font-sans p-4">
-            <div className="text-center">
-                <h1 className="text-6xl font-bold text-blue-800">Aliza</h1>
-                <p className="text-xl text-gray-600 mt-2">Your friendly study buddy!</p>
-                <p className="text-xl text-gray-600 mt-8 mb-10">Which subject are we diving into today?</p>
-                <div className="flex flex-wrap justify-center gap-5">
-                    {Object.entries(SUBJECT_DATA).map(([subject, data]) => (
-                        <button key={subject} onClick={() => onSubjectSelect(subject)} className="bg-white border-2 border-blue-100 rounded-2xl w-36 h-36 flex flex-col justify-center items-center cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:transform hover:-translate-y-1">
-                            <span className="text-5xl">{data.icon}</span>
-                            <span className="text-base font-semibold text-blue-800 mt-2 text-center">{subject}</span>
+        <div style={styles.container}>
+            <div style={styles.subjectSelectionContainer}>
+                <h1 style={styles.appName}>Aliza</h1>
+                <p style={styles.introText}>Your friendly study buddy!</p>
+                <p style={styles.introText}>Which subject are we diving into today?</p>
+                <div style={styles.subjectGrid}>
+                    {Object.keys(SUBJECT_DATA).map(subject => (
+                        <button key={subject} style={styles.subjectButton} onClick={() => onSubjectSelect(subject)}>
+                            <span style={styles.subjectIcon}>{SUBJECT_DATA[subject].icon}</span>
+                            <span style={styles.subjectName}>{subject}</span>
                         </button>
                     ))}
                 </div>
@@ -314,181 +209,212 @@ const SubjectSelectionScreen = ({ onSubjectSelect }) => {
  * The main chat screen, combining the header, chat area, and input controls.
  */
 const ChatScreen = ({ subject, onBack }) => {
-    const [contentIndex, setContentIndex] = useState(0);
-    const [chatHistory, setChatHistory] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [consecutiveMistakes, setConsecutiveMistakes] = useState(0);
-    const [showNextButton, setShowNextButton] = useState(false);
+  const [contentIndex, setContentIndex] = useState(0);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [userInput, setUserInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [consecutiveMistakes, setConsecutiveMistakes] = useState(0);
+  const [showNextButton, setShowNextButton] = useState(false);
 
-    // Initialize chat when subject changes
-    useEffect(() => {
-        const firstContent = SUBJECT_DATA[subject].content[0];
-        setChatHistory([
-            { sender: 'aliza', text: `Howzit! Ready to tackle some ${subject}? Let's start with this one.` },
-            { sender: 'aliza', text: firstContent.fact },
-            { sender: 'aliza', text: firstContent.challenge, isChallenge: true }
-        ]);
-        setContentIndex(0);
-        setConsecutiveMistakes(0);
-        setShowNextButton(false);
-    }, [subject]);
+  const scrollRef = useRef();
 
-    const getAlizaResponse = async (userMessage, currentChallenge, intent = 'answer') => {
-        setIsLoading(true);
-        setShowNextButton(false);
+  const handleTranscript = (transcript) => setUserInput(prev => prev + transcript);
+  const { isListening, toggleListening } = useSpeechRecognition(handleTranscript);
 
-        let promptType;
-        if (intent === 'explain_differently') {
-            promptType = `The user is stuck on this challenge: "${currentChallenge}". Explain the core concept in a completely new and simple way. Use a fun analogy.`;
-        } else if (intent === 'frustrated') {
-            promptType = `The user is feeling frustrated or confused, saying: "${userMessage}". Respond with extra empathy and encouragement. Then, give a simple hint for the challenge: "${currentChallenge}".`;
-        } else {
-            promptType = `The user is working on this challenge: "${currentChallenge}". Their answer is: "${userMessage}". They have made ${consecutiveMistakes} mistakes in a row. Based on their answer, determine if it is correct. If correct, praise them enthusiastically. If wrong, be gentle and give a hint.`;
-        }
+  // Effect to scroll to the bottom of the chat on new messages
+  useEffect(() => { 
+    setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100); 
+  }, [chatHistory]);
 
-        const alizaPrompt = `You are Aliza, a compassionate, empathetic, and super encouraging AI study buddy for a 10-13 year old learner in Cape Town. Your Persona: - Tone: ALWAYS patient, kind, and positive, like a best friend helping with homework. - Language: Use natural, conversational English and friendly South African slang like "Lekker!", "Howzit!", "Eish!". - Explanation Style: Explain things in a simple, fun way. Use easy-to-understand analogies. ${promptType}`;
-        
-        // IMPORTANT: This payload asks the model for a JSON object.
-        const payload = {
-            contents: [{ role: "user", parts: [{ text: alizaPrompt }] }],
-            generationConfig: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: "OBJECT",
-                    properties: {
-                        isCorrect: { type: "BOOLEAN" },
-                        responseText: { type: "STRING" }
-                    },
-                    required: ["isCorrect", "responseText"]
-                }
-            }
-        };
-        
-        // NOTE: In a real application, the API key should be stored securely and not exposed in the client-side code.
-        // This is left as an empty string because the execution environment will provide it.
-        const apiKey = ""; 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  // Effect to initialize the chat when a subject is chosen
+  useEffect(() => {
+    const firstContent = SUBJECT_DATA[subject].content[0];
+    setChatHistory([
+        { sender: 'aliza', text: `Howzit! Ready to tackle some ${subject}? Let's start with this one.` }, 
+        { sender: 'aliza', text: firstContent.fact },
+        { sender: 'aliza', text: firstContent.challenge, isChallenge: true }
+    ]);
+  }, [subject]);
 
-        try {
-            const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            if (!response.ok) {
-                throw new Error(`API call failed with status: ${response.status}`);
-            }
-            const result = await response.json();
-            
-            const rawJsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!rawJsonText) throw new Error("No content in API response.");
+  const getAlizaResponse = async (userMessage, currentChallenge, intent = 'answer') => {
+    setIsLoading(true);
+    setShowNextButton(false);
+    
+    // **BUG FIX**: Ensure currentChallenge is always valid
+    if (!currentChallenge) {
+        console.error("Could not find the current challenge to respond to.");
+        setChatHistory(prev => [...prev, { sender: 'aliza', text: "Eish, I got a bit lost. Let's try the next question." }]);
+        setIsLoading(false);
+        setShowNextButton(true); // Show next button to recover
+        return;
+    }
 
-            const parsedResponse = JSON.parse(rawJsonText);
-            const { isCorrect, responseText } = parsedResponse;
-            
-            setChatHistory(prev => [...prev, { sender: 'aliza', text: responseText, isCorrect }]);
+    let promptType;
+    if (intent === 'explain_differently') {
+        promptType = `The user is stuck on this challenge: "${currentChallenge}". Explain the core concept in a completely new and simple way. Use a fun analogy.`;
+    } else if (intent === 'frustrated') {
+        promptType = `The user is feeling frustrated or confused, saying: "${userMessage}". Respond with extra empathy and encouragement. Then, give a simple hint for the challenge: "${currentChallenge}".`;
+    } else {
+        promptType = `The user is working on this challenge: "${currentChallenge}". Their answer is: "${userMessage}". They have made ${consecutiveMistakes} mistakes in a row. If they get it right, praise them enthusiastically. If wrong, be gentle and give a hint.`;
+    }
 
-            if (isCorrect && intent === 'answer') {
-                setShowNextButton(true);
-                setConsecutiveMistakes(0);
-            } else if (intent === 'answer') {
-                setConsecutiveMistakes(prev => prev + 1);
-            }
-        } catch (error) {
-            console.error("Error fetching or parsing Aliza's response:", error);
-            setChatHistory(prev => [...prev, { sender: 'aliza', text: "Eish, my circuits are a bit tangled! Let's try that again." }]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const alizaPrompt = `You are Aliza, a compassionate, empathetic, and super encouraging AI study buddy for a 10-13 year old learner in Cape Town. Your Persona: - Tone: ALWAYS patient, kind, and positive, like a best friend helping with homework. - Language: Use natural, conversational English and friendly South African slang like "Lekker!", "Howzit!", "Eish!". - Explanation Style: Explain things in a simple, fun way. Use easy-to-understand analogies. ${promptType}`;
+    const apiPayload = { contents: [{ role: "user", parts: [{ text: alizaPrompt }] }] };
+    const apiKey = "";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    try {
+      const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(apiPayload) });
+      const result = await response.json();
+      const alizaResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm a bit stuck, let's try that again!";
+      const isCorrect = (alizaResponse.toLowerCase().includes('lekker') || alizaResponse.toLowerCase().includes('awesome') || alizaResponse.toLowerCase().includes('nailed it')) && intent === 'answer';
+      
+      setChatHistory(prev => [...prev, { sender: 'aliza', text: alizaResponse, isCorrect }]);
+      
+      if (isCorrect) {
+          setShowNextButton(true);
+          setConsecutiveMistakes(0);
+      } else if (intent === 'answer') {
+          setConsecutiveMistakes(prev => prev + 1);
+      }
+    } catch (error) {
+      setChatHistory(prev => [...prev, { sender: 'aliza', text: "Eish, my circuits are a bit tangled! Let's try again." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleUserSend = () => {
+    if (!userInput.trim()) return;
+    const currentChallenge = [...chatHistory].reverse().find(msg => msg.isChallenge)?.text;
+    setShowNextButton(false);
+    setChatHistory(prev => [...prev, { sender: 'user', text: userInput }]);
+    const frustrationKeywords = ['don\'t understand', 'don\'t get it', 'too hard', 'confused'];
+    if (frustrationKeywords.some(keyword => userInput.toLowerCase().includes(keyword))) {
+        getAlizaResponse(userInput, currentChallenge, 'frustrated');
+    } else {
+        getAlizaResponse(userInput, currentChallenge, 'answer');
+    }
+    setUserInput('');
+  };
 
-    const handleUserSend = (userInput) => {
-        if (!userInput.trim()) return;
-        const currentChallenge = [...chatHistory].reverse().find(msg => msg.isChallenge)?.text;
-        setShowNextButton(false);
-        setChatHistory(prev => [...prev, { sender: 'user', text: userInput }]);
+  const handleNextQuestion = () => {
+    setShowNextButton(false);
+    const subjectContent = SUBJECT_DATA[subject].content;
+    const nextIndex = (contentIndex + 1) % subjectContent.length;
+    setContentIndex(nextIndex);
+    const nextContent = subjectContent[nextIndex];
+    setChatHistory(prev => [
+        ...prev, 
+        { sender: 'aliza', text: `Sharp sharp! Here is the next one.` }, 
+        { sender: 'aliza', text: nextContent.fact },
+        { sender: 'aliza', text: nextContent.challenge, isChallenge: true }
+    ]);
+  };
+  
+  const handlePresetClick = (type) => {
+     const currentChallenge = [...chatHistory].reverse().find(msg => msg.isChallenge)?.text;
+     if (type === 'hint') setChatHistory(prev => [...prev, { sender: 'aliza', text: `Okay, let's think... For "${currentChallenge}", try to focus on the key words in the first sentence.` }]);
+     else if (type === 'explain_differently') getAlizaResponse(userInput, currentChallenge, 'explain_differently');
+  };
 
-        const frustrationKeywords = ['don\'t understand', 'don\'t get it', 'too hard', 'confused'];
-        if (frustrationKeywords.some(keyword => userInput.toLowerCase().includes(keyword))) {
-            getAlizaResponse(userInput, currentChallenge, 'frustrated');
-        } else {
-            getAlizaResponse(userInput, currentChallenge, 'answer');
-        }
-    };
+  const styles = getStyles();
 
-    const handleNextQuestion = () => {
-        setShowNextButton(false);
-        const subjectContent = SUBJECT_DATA[subject].content;
-        const nextIndex = (contentIndex + 1) % subjectContent.length;
-        setContentIndex(nextIndex);
-        const nextContent = subjectContent[nextIndex];
-        setChatHistory(prev => [
-            ...prev,
-            { sender: 'aliza', text: `Sharp sharp! Here is the next one.` },
-            { sender: 'aliza', text: nextContent.fact },
-            { sender: 'aliza', text: nextContent.challenge, isChallenge: true }
-        ]);
-    };
-
-    const handlePresetClick = (type) => {
-        const currentChallenge = [...chatHistory].reverse().find(msg => msg.isChallenge)?.text;
-        if (type === 'explain_differently') {
-            getAlizaResponse("I'm a bit stuck", currentChallenge, 'explain_differently');
-        }
-    };
-
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 font-sans">
-            <div className="flex flex-col w-full max-w-2xl h-screen sm:h-[95vh] sm:max-h-[800px] bg-white shadow-2xl sm:rounded-2xl overflow-hidden">
-                <header className="flex items-center justify-between p-3 sm:p-4 bg-blue-50 border-b border-blue-200 shrink-0">
-                    <button onClick={onBack} className="font-bold text-blue-600 hover:text-blue-800 transition-colors">← Back</button>
-                    <h2 className="text-xl font-bold text-blue-800">{subject}</h2>
-                    <div className="w-14" /> {/* Spacer */}
-                </header>
-
-                <MessageList chatHistory={chatHistory} isLoading={isLoading} />
-
-                {showNextButton && !isLoading && (
-                    <div className="p-3 bg-gray-50 flex justify-center">
-                        <button onClick={handleNextQuestion} className="bg-green-500 text-white font-bold py-2 px-6 rounded-full hover:bg-green-600 transition-colors shadow-md">
-                            Next Question ➤
-                        </button>
-                    </div>
-                )}
-
-                <div className="p-2 sm:p-3 border-t border-gray-200 bg-white">
-                     <button onClick={() => handlePresetClick('explain_differently')} className="w-full text-left bg-gray-100 border border-gray-200 text-blue-600 rounded-lg px-4 py-2 text-sm font-semibold hover:bg-gray-200 transition-colors disabled:opacity-50" disabled={isLoading || showNextButton}>
-                        🤔 Explain it differently
-                    </button>
-                </div>
-
-                <ChatInput 
-                    onSend={handleUserSend} 
-                    isLoading={isLoading} 
-                    showNextButton={showNextButton}
-                    isListening={false} // dummy props, internal state is used
-                    onToggleListening={() => {}} // dummy props
-                />
-            </div>
+  return (
+    <div style={styles.container}>
+      <div style={styles.chatContainer}>
+        <div style={styles.header}>
+            <button style={styles.backButton} onClick={onBack}>← Back</button>
+            <h2 style={styles.headerTitle}>{subject}</h2>
+            <div style={{width: 50}}/>
         </div>
-    );
+        <div style={styles.chatArea}>
+          {chatHistory.map((msg, index) => <ChatMessage key={index} message={msg} />)}
+          {isLoading && <div style={styles.alizaBubble}><p style={styles.chatText}>Thinking...</p></div>}
+          <div ref={scrollRef} />
+        </div>
+        
+        {showNextButton && !isLoading && (
+            <div style={styles.nextQuestionContainer}>
+                <button style={styles.nextQuestionButton} onClick={handleNextQuestion}>
+                    Next Question ➤
+                </button>
+            </div>
+        )}
+
+        <div style={styles.presetReplies}>
+            <button style={styles.presetButton} onClick={() => handlePresetClick('hint')}>Give me a hint</button>
+            <button style={styles.presetButton} onClick={() => handlePresetClick('explain_differently')}>Explain it differently</button>
+        </div>
+        <div style={styles.inputContainer}>
+          <input
+            style={styles.textInput}
+            placeholder={isListening ? "Listening..." : "Type or speak your answer..."}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleUserSend()}
+            disabled={isLoading || showNextButton}
+          />
+          <button style={{...styles.micButton, ...(isListening ? styles.micButtonListening : {})}} onClick={toggleListening} disabled={isLoading || showNextButton}>🎙️</button>
+          <button style={styles.sendButton} onClick={handleUserSend} disabled={isLoading || showNextButton}>➤</button>
+        </div>
+      </div>
+    </div>
+  );
 };
+
 
 /**
  * The main App component. It acts as a controller to show either the
  * subject selection screen or the main chat screen.
  */
 export default function App() {
-    const [currentSubject, setCurrentSubject] = useState(null);
+  const [currentSubject, setCurrentSubject] = useState(null);
 
-    // Pre-load voices for the speech synthesis API
-    useEffect(() => {
-        const triggerVoices = () => window.speechSynthesis.getVoices();
-        triggerVoices();
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-          window.speechSynthesis.onvoiceschanged = triggerVoices;
-        }
-    }, []);
+  // Load voices for TTS hook on initial render
+  useEffect(() => { 
+    window.speechSynthesis.getVoices(); 
+  }, []);
 
-    if (!currentSubject) {
-        return <SubjectSelectionScreen onSubjectSelect={setCurrentSubject} />;
-    }
+  if (!currentSubject) {
+    return <SubjectSelectionScreen onSubjectSelect={setCurrentSubject} />;
+  }
 
-    return <ChatScreen subject={currentSubject} onBack={() => setCurrentSubject(null)} />;
+  return <ChatScreen subject={currentSubject} onBack={() => setCurrentSubject(null)} />;
 }
+
+// --- Styles ---
+// Grouped into a single function to keep them organized and out of the component logic.
+const getStyles = () => ({
+  container: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F0F4F8', fontFamily: 'sans-serif' },
+  // Subject Selection Screen
+  subjectSelectionContainer: { textAlign: 'center', padding: 20 },
+  appName: { fontSize: 56, fontWeight: 'bold', color: '#1E3A8A', margin: 0 },
+  introText: { fontSize: 20, color: '#4A5568', marginTop: 8 },
+  subjectGrid: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', marginTop: 40 },
+  subjectButton: { backgroundColor: '#fff', border: '2px solid #DBEAFE', borderRadius: 20, width: 140, height: 140, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
+  subjectIcon: { fontSize: 48 },
+  subjectName: { fontSize: 16, color: '#1E3A8A', fontWeight: '600', marginTop: 10 },
+  // Chat Screen
+  chatContainer: { display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 600, height: '100%', backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0,0,0,0.1)', borderRadius: '20px', overflow: 'hidden' },
+  header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', backgroundColor: '#DBEAFE' },
+  backButton: { background: 'none', border: 'none', fontSize: 16, color: '#1E3A8A', cursor: 'pointer', fontWeight: 'bold' },
+  headerTitle: { color: '#1E3A8A', fontSize: 20, fontWeight: 'bold' },
+  chatArea: { flex: 1, padding: '10px 20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', backgroundColor: '#F9FAFB' },
+  alizaBubble: { alignSelf: 'flex-start', backgroundColor: '#E0E7FF', borderRadius: '20px 20px 20px 5px', padding: '12px 18px', maxWidth: '85%' },
+  alizaChallengeBubble: { alignSelf: 'flex-start', backgroundColor: '#FFFBEB', border: '2px solid #FBBF24', borderRadius: '20px 20px 20px 5px', padding: '12px 18px', maxWidth: '85%' },
+  userBubble: { alignSelf: 'flex-end', backgroundColor: '#3B82F6', color: '#fff', borderRadius: '20px 20px 5px 20px', padding: '12px 18px', maxWidth: '80%' },
+  chatTextContainer: { display: 'flex', alignItems: 'center', gap: '10px' },
+  chatText: { margin: 0, fontSize: 16, lineHeight: 1.5, flex: 1 },
+  speakerButton: { background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', padding: '0 5px' },
+  highlightedWord: { backgroundColor: '#FCD34D', color: '#1E3A8A', borderRadius: '3px' },
+  nextQuestionContainer: { padding: '10px 20px', backgroundColor: '#F9FAFB', display: 'flex', justifyContent: 'center' },
+  nextQuestionButton: { backgroundColor: '#10B981', color: 'white', border: 'none', borderRadius: 20, padding: '10px 25px', cursor: 'pointer', fontSize: 16, fontWeight: 'bold' },
+  presetReplies: { display: 'flex', gap: '10px', padding: '10px 20px', borderTop: '1px solid #E5E7EB' },
+  presetButton: { backgroundColor: '#E0E7FF', border: '1px solid #C7D2FE', color: '#3B82F6', borderRadius: 20, padding: '8px 16px', cursor: 'pointer', fontSize: 14, fontWeight: '600' },
+  inputContainer: { display: 'flex', padding: '15px 20px', borderTop: '1px solid #E5E7EB', backgroundColor: '#fff', gap: '10px' },
+  textInput: { flex: 1, border: '1px solid #D1D5DB', borderRadius: 20, padding: '12px 18px', fontSize: 16 },
+  micButton: { backgroundColor: '#F3F4F6', color: '#1F2937', border: '1px solid #D1D5DB', borderRadius: '50%', width: 48, height: 48, fontSize: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  micButtonListening: { backgroundColor: '#FECACA', border: '1px solid #F87171' },
+  sendButton: { backgroundColor: '#3B82F6', color: '#fff', border: 'none', borderRadius: '50%', width: 48, height: 48, fontSize: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+});
